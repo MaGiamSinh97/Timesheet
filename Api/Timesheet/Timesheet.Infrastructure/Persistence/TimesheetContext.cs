@@ -18,10 +18,16 @@ namespace Timesheet.Infrastructure.Persistence
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Timesheet.Core.Timesheet>().HasKey(tc => tc.Id);
             modelBuilder.Entity<Employee>().HasKey(tc => tc.Id);
+            modelBuilder.Entity<Project>().HasKey(tc => tc.Id);
+            modelBuilder.Entity<ProjectEmployee>().HasKey(sc => new { sc.ProjectId, sc.EmployeeId });
 
             // Timecard and Task Relationship
             modelBuilder.Entity<Timesheet.Core.Timesheet>().HasOne(t => t.Employee)
                 .WithMany(t => t.Timesheets);
+            modelBuilder.Entity<ProjectEmployee>().HasOne(p => p.Project)
+                .WithMany(p => p.ProjectEmployees).HasForeignKey(p => p.ProjectId); ;
+            modelBuilder.Entity<ProjectEmployee>().HasOne(p => p.Employee)
+                .WithMany(p => p.ProjectEmployees).HasForeignKey(p=>p.EmployeeId);
         }
     }
 }

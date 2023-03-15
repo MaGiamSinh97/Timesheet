@@ -42,11 +42,11 @@ namespace Timesheet.Api.Services
 
         public bool CheckDuplicate(string Ldap)
         {
-            return this.context.Employees.Any(t => t.Ldap == Ldap);
+            return this.context.Employees.Any(t => t.KnoxId == Ldap);
         }
         public async Task<Core.Employee> FindAsync(string ldap)
         {
-            return await this.context.Employees.Where(t => t.Ldap == ldap).FirstOrDefaultAsync();
+            return await this.context.Employees.Where(t => t.KnoxId == ldap).FirstOrDefaultAsync();
         }
     }
 }

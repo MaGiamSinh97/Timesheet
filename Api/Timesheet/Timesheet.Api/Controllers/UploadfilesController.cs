@@ -50,15 +50,14 @@ namespace FileuploadwithReact.Controllers
                         {
                             AccNo = (int)dataRow.Cell(1).Value.GetNumber(),
                             FullName = dataRow.Cell(2).Value.GetText(),
-                            Ldap = dataRow.Cell(3).Value.GetText(),
-                            Project = dataRow.Cell(4).Value.GetText(),
+                            KnoxId = dataRow.Cell(3).Value.GetText(),
                             Du = dataRow.Cell(5).Value.GetText()
                         };
-                        if (!serviceEmp.CheckDuplicate(employee.Ldap))
+                        if (!serviceEmp.CheckDuplicate(employee.KnoxId))
                         {
                             await serviceEmp.Add(employee);
                         }
-                        employee = await serviceEmp.FindAsync(employee.Ldap);
+                        employee = await serviceEmp.FindAsync(employee.KnoxId);
 
                         Timesheet.Core.Timesheet timesheet = new Timesheet.Core.Timesheet()
                         {

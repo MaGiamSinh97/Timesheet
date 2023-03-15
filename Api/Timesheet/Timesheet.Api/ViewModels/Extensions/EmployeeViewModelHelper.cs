@@ -29,8 +29,7 @@ namespace Timesheet.Api.ViewModels.Extensions
                  Name = model.FullName,
                  AccNo = model.AccNo,
                  Du = model.Du,
-                 Ldap = model.Ldap,
-                 Project = model.Project,
+                 Ldap = model.KnoxId,
                  Timesheets = model.Timesheets.Select(t => t.ToViewTimesheetModel()).ToList()
              };
 
@@ -41,7 +40,7 @@ namespace Timesheet.Api.ViewModels.Extensions
         public static TimesheetViewModel ToViewTimesheetModel(this Core.Timesheet model) =>
           new TimesheetViewModel
           {
-              Ldap = model.Employee.Ldap,
+              Ldap = model.Employee.KnoxId,
               Name = model.Employee.FullName,
               Id = model.Id,
               Date = model.Date,

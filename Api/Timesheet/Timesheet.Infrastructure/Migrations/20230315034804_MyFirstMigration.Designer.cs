@@ -12,8 +12,8 @@ using Timesheet.Infrastructure.Persistence;
 namespace Timesheet.Infrastructure.Migrations
 {
     [DbContext(typeof(TimesheetContext))]
-    [Migration("20230309092300_FirstMigration")]
-    partial class FirstMigration
+    [Migration("20230315034804_MyFirstMigration")]
+    partial class MyFirstMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,15 +42,49 @@ namespace Timesheet.Infrastructure.Migrations
                     b.Property<string>("FullName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Ldap")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Project")
+                    b.Property<string>("KnoxId")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Employees");
+                });
+
+            modelBuilder.Entity("Timesheet.Core.Project", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Du")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Project");
+                });
+
+            modelBuilder.Entity("Timesheet.Core.ProjectEmployee", b =>
+                {
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProjectId", "EmployeeId");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("ProjectEmployee");
                 });
 
             modelBuilder.Entity("Timesheet.Core.Timesheet", b =>
@@ -80,6 +114,25 @@ namespace Timesheet.Infrastructure.Migrations
                     b.ToTable("Timesheets");
                 });
 
+            modelBuilder.Entity("Timesheet.Core.ProjectEmployee", b =>
+                {
+                    b.HasOne("Timesheet.Core.Employee", "Employee")
+                        .WithMany("ProjectEmployees")
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Timesheet.Core.Project", "Project")
+                        .WithMany("ProjectEmployees")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("Project");
+                });
+
             modelBuilder.Entity("Timesheet.Core.Timesheet", b =>
                 {
                     b.HasOne("Timesheet.Core.Employee", "Employee")
@@ -91,7 +144,14 @@ namespace Timesheet.Infrastructure.Migrations
 
             modelBuilder.Entity("Timesheet.Core.Employee", b =>
                 {
+                    b.Navigation("ProjectEmployees");
+
                     b.Navigation("Timesheets");
+                });
+
+            modelBuilder.Entity("Timesheet.Core.Project", b =>
+                {
+                    b.Navigation("ProjectEmployees");
                 });
 #pragma warning restore 612, 618
         }
