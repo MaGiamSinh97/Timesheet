@@ -38,6 +38,8 @@ namespace Timesheet.Api
                 );
             services.AddScoped<EmployeeService>();
             services.AddScoped<TimesheetService>();
+            services.AddScoped<ProjectService>();
+            services.AddScoped<ProjectEmployeeService>();
 
             services.AddCors(options =>
             {

@@ -16,6 +16,7 @@ using System.Data;
 using ClosedXML.Excel;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Timesheet.Api.Services;
+using Timesheet.Core;
 
 namespace FileuploadwithReact.Controllers
 {
@@ -25,10 +26,14 @@ namespace FileuploadwithReact.Controllers
     {
         private readonly EmployeeService serviceEmp;
         private readonly TimesheetService serviceTs;
-        public UploadfilesController(EmployeeService serviceEmp, TimesheetService serviceTs)
+        private readonly ProjectService servicePj;
+        private readonly ProjectEmployeeService servicePE;
+        public UploadfilesController(EmployeeService serviceEmp, TimesheetService serviceTs,ProjectService servicePj, ProjectEmployeeService servicePE)
         {
             this.serviceEmp = serviceEmp ?? throw new ArgumentNullException();
             this.serviceTs = serviceTs ?? throw new ArgumentNullException();
+            this.servicePj = servicePj ?? throw new ArgumentNullException();
+            this.servicePE = servicePE ?? throw new ArgumentNullException();
         }
         [HttpPost("ImportFile")]
         public async Task<IActionResult> ImportFile([FromForm] IFormFile file)
@@ -46,6 +51,17 @@ namespace FileuploadwithReact.Controllers
 
                     foreach (var dataRow in nonEmptyDataRows)
                     {
+                        Project project = new Project()
+                        {
+                            Du = dataRow.Cell(5).Value.GetText(),
+                            Name = dataRow.Cell(4).Value.GetText(),
+                        };
+                        if (!servicePj.CheckDuplicate(project.Name))
+                        {
+                            await servicePj.Add(project);
+                        }
+                        project = await servicePj.FindAsync(project.Name);
+
                         Timesheet.Core.Employee employee = new Timesheet.Core.Employee()
                         {
                             AccNo = (int)dataRow.Cell(1).Value.GetNumber(),
@@ -58,6 +74,16 @@ namespace FileuploadwithReact.Controllers
                             await serviceEmp.Add(employee);
                         }
                         employee = await serviceEmp.FindAsync(employee.KnoxId);
+
+                        ProjectEmployee projectEmployee = new ProjectEmployee()
+                        {
+                            Project = project,
+                            Employee = employee,
+                        };
+                        if (!servicePE.CheckDuplicate(project.Id, employee.Id))
+                        {
+                            await servicePE.Add(projectEmployee);
+                        }
 
                         Timesheet.Core.Timesheet timesheet = new Timesheet.Core.Timesheet()
                         {

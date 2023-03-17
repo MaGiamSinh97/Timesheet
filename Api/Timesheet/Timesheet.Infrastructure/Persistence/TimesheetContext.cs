@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using Timesheet.Core;
 
 namespace Timesheet.Infrastructure.Persistence
@@ -8,6 +9,8 @@ namespace Timesheet.Infrastructure.Persistence
         public DbSet<Timesheet.Core.Timesheet> Timesheets { get; set; }
 
         public DbSet<Employee> Employees { get; set; }
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<ProjectEmployee> ProjectEmployees { get; set; }
 
         public TimesheetContext(DbContextOptions<TimesheetContext> options) : base(options)
         {
@@ -28,6 +31,11 @@ namespace Timesheet.Infrastructure.Persistence
                 .WithMany(p => p.ProjectEmployees).HasForeignKey(p => p.ProjectId); ;
             modelBuilder.Entity<ProjectEmployee>().HasOne(p => p.Employee)
                 .WithMany(p => p.ProjectEmployees).HasForeignKey(p=>p.EmployeeId);
+        }
+
+        public object Find(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }
