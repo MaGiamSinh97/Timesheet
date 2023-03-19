@@ -66,7 +66,7 @@ namespace Timesheet.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Project");
+                    b.ToTable("Projects");
                 });
 
             modelBuilder.Entity("Timesheet.Core.ProjectEmployee", b =>
@@ -81,7 +81,7 @@ namespace Timesheet.Infrastructure.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("ProjectEmployee");
+                    b.ToTable("ProjectEmployees");
                 });
 
             modelBuilder.Entity("Timesheet.Core.Timesheet", b =>

@@ -12,8 +12,8 @@ using Timesheet.Infrastructure.Persistence;
 namespace Timesheet.Infrastructure.Migrations
 {
     [DbContext(typeof(TimesheetContext))]
-    [Migration("20230315034804_MyFirstMigration")]
-    partial class MyFirstMigration
+    [Migration("20230318130808_firstmigration")]
+    partial class firstmigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -69,7 +69,7 @@ namespace Timesheet.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Project");
+                    b.ToTable("Projects");
                 });
 
             modelBuilder.Entity("Timesheet.Core.ProjectEmployee", b =>
@@ -84,7 +84,7 @@ namespace Timesheet.Infrastructure.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("ProjectEmployee");
+                    b.ToTable("ProjectEmployees");
                 });
 
             modelBuilder.Entity("Timesheet.Core.Timesheet", b =>
