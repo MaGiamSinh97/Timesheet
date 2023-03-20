@@ -10,6 +10,7 @@ using Timesheet.Api.Helpers;
 using Timesheet.Api.Services;
 using Timesheet.Api.ViewModels;
 using Timesheet.Api.ViewModels.Extensions;
+using Timesheet.Core;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -95,6 +96,40 @@ namespace Timesheet.Api.Controllers
             if (result > 0)
             {
                 return Ok("Deleted Successfully");
+            }
+            else
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Something Went Wrong");
+            }
+        }
+
+        [HttpGet("GetMember/{id}")]
+        public async Task<ActionResult<Core.Employee[]>> GetMember(int id)
+        {
+            var employees = await this.service.GetMember(id);
+            return Ok(employees);
+        }
+
+        [HttpDelete("RemoveMember/{proId}/{empId}")]
+        public async Task<ActionResult<Core.Project[]>> RemoveMember(int proId, int empId)
+        {
+            var result = await this.service.RemoveMember(proId, empId);
+            if (result > 0)
+            {
+                return Ok("Removed Successfully");
+            }
+            else
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Something Went Wrong");
+            }
+        }
+        [HttpPost("AddMember")]
+        public async Task<ActionResult<Core.Project[]>> AddMember(ProjectEmployee projectEmployee)
+        {
+            var result = await this.service.AddMember(projectEmployee);
+            if (result > 0)
+            {
+                return Ok("Add Member Successfully");
             }
             else
             {

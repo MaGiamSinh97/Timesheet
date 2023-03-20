@@ -12,7 +12,7 @@ namespace Timesheet.Api.ViewModels.Extensions
              new Core.Timesheet() { Id = viewModel.Id, Date = viewModel.Date };
         
         public static Core.Employee ToEmployeeEntity(this EmployeeViewModel viewModel) =>
-             new Core.Employee() { FullName = viewModel.Name };
+             new Core.Employee() { FullName = viewModel.EmployeeName };
 
     }
 }

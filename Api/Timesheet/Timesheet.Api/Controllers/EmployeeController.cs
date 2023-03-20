@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -43,23 +44,51 @@ namespace Timesheet.Api.Controllers
             return NotFound();
         }
 
+
         [HttpPost]
         public async Task<ActionResult<Core.Employee[]>> Post(Core.Employee model)
         {
             model.Id = 0;
-           
-            await this.service.Add(model);
-            return CreatedAtRoute(nameof(EmployeeController.Get), new { id = model.Id });
+            var result = await this.service.Add(model);
+            if (result > 0)
+            {
+                return Ok("Added Successfully");
+            }
+            else
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Something Went Wrong");
+            }
         }
 
         [HttpPut]
         public async Task<ActionResult<Core.Employee[]>> Put(Core.Employee model)
         {
-            model.Id = 0;
-
-            await this.service.Add(model);
-            return NoContent();
+            var result = await this.service.Update(model);
+            if (result > 0)
+            {
+                return Ok("Updated Successfully");
+            }
+            else
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Something Went Wrong");
+            }
         }
+
+        // DELETE api/<TimesheetController>/5
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Core.Employee[]>> Delete(int Id)
+        {
+            var result = await this.service.Delete(Id);
+            if (result > 0)
+            {
+                return Ok("Deleted Successfully");
+            }
+            else
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Something Went Wrong");
+            }
+        }
+
 
         [HttpPatch]
         public ActionResult<Core.Employee[]> Patch(JsonPatchDocument<UpdateEmployeeViewModel> patchDocument)

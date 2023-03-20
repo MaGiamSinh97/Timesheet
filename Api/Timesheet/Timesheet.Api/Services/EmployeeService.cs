@@ -29,10 +29,27 @@ namespace Timesheet.Api.Services
             return await this.context.Employees.Include("Timesheets").AsNoTracking().ToListAsync();
         }
 
-        public async System.Threading.Tasks.Task Add(Timesheet.Core.Employee employee)
+        public async System.Threading.Tasks.Task<int> Add(Timesheet.Core.Employee employee)
         {
             await this.context.AddAsync(employee);
-            await this.context.SaveChangesAsync();
+            return await this.context.SaveChangesAsync();
+        }
+
+        public async System.Threading.Tasks.Task<int> Update(Timesheet.Core.Employee employee)
+        {
+            this.context.Entry(employee).State = EntityState.Modified;
+            return await this.context.SaveChangesAsync();
+        }
+
+        public async System.Threading.Tasks.Task<int> Delete(int Id)
+        {
+            var employee = this.context.Employees.Find(Id);
+            if (employee != null)
+            {
+                this.context.Employees.Entry(employee).State = EntityState.Deleted;
+                return await this.context.SaveChangesAsync();
+            }
+            return 0;
         }
 
         public async Task<Core.Employee> GetAsync(int id)

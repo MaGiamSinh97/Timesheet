@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Timesheet.Core;
 using Timesheet.Infrastructure.Persistence;
 
 namespace Timesheet.Api.Services
@@ -53,6 +54,22 @@ namespace Timesheet.Api.Services
             }
             return 0;
         }
+        public async System.Threading.Tasks.Task<int> RemoveMember(int proId, int empId)
+        {
+            var projectEmp = this.context.ProjectEmployees.First(row => row.ProjectId == proId && row.EmployeeId == empId);
+            if (projectEmp != null)
+            {
+                this.context.ProjectEmployees.Entry(projectEmp).State = EntityState.Deleted;
+                return await this.context.SaveChangesAsync();
+            }
+            return 0;
+        }
+        public async System.Threading.Tasks.Task<int> AddMember(ProjectEmployee projectEmployee)
+        {
+            this.context.ProjectEmployees.Add(projectEmployee);
+            return await this.context.SaveChangesAsync();
+
+        }
         public bool CheckDuplicate(string name)
         {
             return this.context.Projects.Any(t => t.Name == name);
@@ -61,5 +78,12 @@ namespace Timesheet.Api.Services
         {
             return await this.context.Projects.Where(t => t.Name == name).FirstOrDefaultAsync();
         }
+
+        public async Task<IEnumerable<Core.Employee>> GetMember(int projectId)
+        {
+            var result = await this.context.ProjectEmployees.Include(x => x.Employee).Where(emp => emp.ProjectId == projectId).Select(emp => emp.Employee).ToListAsync();
+            return result;
+        }
+
     }
 }

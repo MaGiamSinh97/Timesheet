@@ -26,10 +26,11 @@ namespace Timesheet.Api.ViewModels.Extensions
         public static EmployeeViewModel ToViewModel(this Core.Employee model) =>
              new EmployeeViewModel()
              {
-                 Name = model.FullName,
+                 EmployeeId = model.Id,
+                 EmployeeName = model.FullName,
                  AccNo = model.AccNo,
                  Du = model.Du,
-                 Ldap = model.KnoxId,
+                 KnoxId = model.KnoxId,
                  Timesheets = model.Timesheets.Select(t => t.ToViewTimesheetModel()).ToList()
              };
 
