@@ -1,11 +1,14 @@
 ﻿using DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
 using DocumentFormat.OpenXml.Vml.Spreadsheet;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
+using Timesheet.Api.Helpers;
 using Timesheet.Infrastructure.Persistence;
 
 namespace Timesheet.Api.Services
@@ -64,6 +67,34 @@ namespace Timesheet.Api.Services
         public async Task<Core.Employee> FindAsync(string ldap)
         {
             return await this.context.Employees.Where(t => t.KnoxId == ldap).FirstOrDefaultAsync();
+        }
+
+        public HashSalt EncryptPassword(string password)
+        {
+            byte[] salt = new byte[128 / 8]; // Generate a 128-bit salt using a secure PRNG
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(salt);
+            }
+            string encryptedPassw = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password: password,
+                salt: salt,
+                prf: KeyDerivationPrf.HMACSHA1,
+                iterationCount: 10000,
+                numBytesRequested: 256 / 8
+            ));
+            return new HashSalt { Hash = encryptedPassw, Salt = salt };
+        }
+        public bool VerifyPassword(string enteredPassword, byte[] salt, string storedPassword)
+        {
+            string encryptedPassw = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password: enteredPassword,
+                salt: salt,
+                prf: KeyDerivationPrf.HMACSHA1,
+                iterationCount: 10000,
+                numBytesRequested: 256 / 8
+            ));
+            return encryptedPassw == storedPassword;
         }
     }
 }

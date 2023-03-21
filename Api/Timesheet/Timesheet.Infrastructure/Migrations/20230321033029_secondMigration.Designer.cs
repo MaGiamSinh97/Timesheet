@@ -12,8 +12,8 @@ using Timesheet.Infrastructure.Persistence;
 namespace Timesheet.Infrastructure.Migrations
 {
     [DbContext(typeof(TimesheetContext))]
-    [Migration("20230318130808_firstmigration")]
-    partial class firstmigration
+    [Migration("20230321033029_secondMigration")]
+    partial class secondMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,11 +39,20 @@ namespace Timesheet.Infrastructure.Migrations
                     b.Property<string>("Du")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("EncPass")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FullName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("KnoxId")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("StoredSalt")
+                        .HasColumnType("varbinary(max)");
 
                     b.HasKey("Id");
 

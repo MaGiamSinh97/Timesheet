@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Timesheet.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class firstmigration : Migration
+    public partial class MyFirstMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,7 +20,9 @@ namespace Timesheet.Infrastructure.Migrations
                     KnoxId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Du = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    AccNo = table.Column<int>(type: "int", nullable: false)
+                    AccNo = table.Column<int>(type: "int", nullable: false),
+                    EncPass = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StoredSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
                 },
                 constraints: table =>
                 {

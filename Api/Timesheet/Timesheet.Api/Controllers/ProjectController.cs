@@ -137,6 +137,7 @@ namespace Timesheet.Api.Controllers
             }
         }
 
+
         [HttpOptions]
         public IActionResult GetProjectOptions()
         {

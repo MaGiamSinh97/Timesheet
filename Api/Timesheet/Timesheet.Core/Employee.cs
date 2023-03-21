@@ -14,6 +14,9 @@ namespace Timesheet.Core
         public string FullName { get; set; }
         public string Du { get; set; }
         public int AccNo { get; set; }
+        public string EncPass { get; set; }
+        public byte[] StoredSalt { get; set; }
+        public int Role { get; set; }
         public ICollection<Timesheet> Timesheets { get; set; }
         public ICollection<ProjectEmployee> ProjectEmployees { get; set; }
     }
