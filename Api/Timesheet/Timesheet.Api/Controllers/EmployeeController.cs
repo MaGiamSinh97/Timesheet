@@ -136,8 +136,8 @@ namespace Timesheet.Api.Controllers
             var isPasswordMatched = service.VerifyPassword(employee.EncPass, user.StoredSalt, user.EncPass);
             if (isPasswordMatched)
             {
-                var token = GenerateToken(employee);
-                return Ok(new { data = token });
+                var token = GenerateToken(user);
+                return Ok(new { token = token, name = user.FullName, role = user.Role , knoxId = user.KnoxId});
             }
             else
             {

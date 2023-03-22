@@ -8,8 +8,8 @@ namespace Timesheet.Api.ViewModels.Extensions
 {
     public static class ViewModelToEntity
     {
-        public static Core.Timesheet ToTimesheetEntity(this TimesheetViewModel viewModel) =>
-             new Core.Timesheet() { Id = viewModel.Id, Date = viewModel.Date };
+        //public static Core.Timesheet ToTimesheetEntity(this TimesheetViewModel viewModel) =>
+        //     new Core.Timesheet() { Id = viewModel.Id, Date = viewModel.Date };
         
         public static Core.Employee ToEmployeeEntity(this EmployeeViewModel viewModel) =>
              new Core.Employee() { FullName = viewModel.EmployeeName };

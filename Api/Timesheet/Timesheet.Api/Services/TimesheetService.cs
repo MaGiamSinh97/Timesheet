@@ -20,7 +20,7 @@ namespace Timesheet.Api.Services
 
         public async Task<IEnumerable<Core.Timesheet>> GetAllAsync()
         {
-            return await this.context.Timesheets.ToListAsync();
+            return await this.context.Timesheets.Include(x=>x.Employee).ThenInclude(x=>x.ProjectEmployees).ThenInclude(x=>x.Project).AsNoTracking().ToListAsync();
         }
 
         public async Task<IEnumerable<Core.Timesheet>> GetAllAsync(IEnumerable<int> ids)
