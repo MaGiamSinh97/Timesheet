@@ -15,5 +15,6 @@ namespace Timesheet.Core
         public DateTime TimeOut { get; set; }
         public DateTime StartApply { get; set; }
         public DateTime EndApply { get; set; }
+        public int EmployeeId { get;set; }
     }
 }

@@ -31,7 +31,8 @@ namespace Timesheet.Infrastructure.Persistence
             modelBuilder.Entity<Timesheet.Core.Timesheet>().HasOne(t => t.Employee)
                 .WithMany(t => t.Timesheets);
             modelBuilder.Entity<Timesheet.Core.TimeWork>().HasOne(t => t.Employee)
-                .WithMany(t=> t.Timeworks);
+                .WithMany(t => t.Timeworks)
+                .HasForeignKey(n => n.EmployeeId);
             modelBuilder.Entity<ProjectEmployee>().HasOne(p => p.Project)
                 .WithMany(p => p.ProjectEmployees).HasForeignKey(p => p.ProjectId); ;
             modelBuilder.Entity<ProjectEmployee>().HasOne(p => p.Employee)

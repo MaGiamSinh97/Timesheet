@@ -21,10 +21,12 @@ namespace Timesheet.Api.Controllers
     public class TimeworkController : ControllerBase
     {
         private readonly TimeworkService service;
+        private readonly EmployeeService empService;
 
-        public TimeworkController(TimeworkService service)
+        public TimeworkController(TimeworkService service, EmployeeService empservice)
         {
             this.service = service ?? throw new ArgumentNullException(nameof(service));
+            this.empService = empservice ?? throw new ArgumentNullException(nameof(service));
         }
 
         // GET: api/<TimesheetController>
@@ -67,6 +69,7 @@ namespace Timesheet.Api.Controllers
             timeWork.Type = model.Type;
             timeWork.TimeIn = defaulDate.Add(TimeSpan.Parse(model.TimeIn));
             timeWork.TimeOut = defaulDate.Add(TimeSpan.Parse(model.TimeOut));
+            timeWork.EmployeeId = model.EmployeeId;
             if(model.StartApply != "" && model.EndApply != "")
             {
                 timeWork.StartApply = DateTime.ParseExact(model.StartApply.Substring(0,10), "yyyy-MM-dd",

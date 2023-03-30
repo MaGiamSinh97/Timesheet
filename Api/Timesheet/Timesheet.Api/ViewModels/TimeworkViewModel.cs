@@ -5,6 +5,7 @@ namespace Timesheet.Api.ViewModels
     public class TimeworkViewModel
     {
         public int Id { get; set; }
+        public int EmployeeId { get; set; }
         public Employee Employee { get; set; }
         public int Type { get; set; }
         public string TimeIn { get; set; }

@@ -33,8 +33,15 @@ namespace Timesheet.Api.Services
         }
         public async Task<int> Add(Core.TimeWork timeWork)
         {
-            await this.context.TimeWorks.AddAsync(timeWork);
-            return await this.context.SaveChangesAsync();
+            try
+            {
+                await this.context.TimeWorks.AddAsync(timeWork);
+                return await this.context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         public async Task<Core.TimeWork> GetAsync(int id)

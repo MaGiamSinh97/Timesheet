@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Timesheet.Core
 {
@@ -7,8 +8,10 @@ namespace Timesheet.Core
         public Employee()
         {
             this.Timesheets = new List<Timesheet>();
+            this.Timeworks = new List<TimeWork>();
             this.ProjectEmployees = new List<ProjectEmployee>();
         }
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string KnoxId { get; set; }
         public string FullName { get; set; }
