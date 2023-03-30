@@ -12,6 +12,8 @@ namespace Timesheet.Infrastructure.Persistence
         public DbSet<Project> Projects { get; set; }
         public DbSet<ProjectEmployee> ProjectEmployees { get; set; }
 
+        public DbSet<TimeWork> TimeWorks { get; set; }
+
         public TimesheetContext(DbContextOptions<TimesheetContext> options) : base(options)
         {
         }
@@ -22,11 +24,14 @@ namespace Timesheet.Infrastructure.Persistence
             modelBuilder.Entity<Timesheet.Core.Timesheet>().HasKey(tc => tc.Id);
             modelBuilder.Entity<Employee>().HasKey(tc => tc.Id);
             modelBuilder.Entity<Project>().HasKey(tc => tc.Id);
+            modelBuilder.Entity<TimeWork>().HasKey(tc => tc.Id);
             modelBuilder.Entity<ProjectEmployee>().HasKey(sc => new { sc.ProjectId, sc.EmployeeId });
 
-            // Timecard and Task Relationship
+
             modelBuilder.Entity<Timesheet.Core.Timesheet>().HasOne(t => t.Employee)
                 .WithMany(t => t.Timesheets);
+            modelBuilder.Entity<Timesheet.Core.TimeWork>().HasOne(t => t.Employee)
+                .WithMany(t=> t.Timeworks);
             modelBuilder.Entity<ProjectEmployee>().HasOne(p => p.Project)
                 .WithMany(p => p.ProjectEmployees).HasForeignKey(p => p.ProjectId); ;
             modelBuilder.Entity<ProjectEmployee>().HasOne(p => p.Employee)

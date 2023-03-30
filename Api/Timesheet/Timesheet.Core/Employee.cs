@@ -18,6 +18,7 @@ namespace Timesheet.Core
         public byte[] StoredSalt { get; set; }
         public int Role { get; set; }
         public ICollection<Timesheet> Timesheets { get; set; }
+        public ICollection<TimeWork> Timeworks { get; set; }
         public ICollection<ProjectEmployee> ProjectEmployees { get; set; }
     }
 }

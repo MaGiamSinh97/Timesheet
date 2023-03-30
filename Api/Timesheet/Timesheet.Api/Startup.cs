@@ -43,6 +43,7 @@ namespace Timesheet.Api
             services.AddScoped<TimesheetService>();
             services.AddScoped<ProjectService>();
             services.AddScoped<ProjectEmployeeService>();
+            services.AddScoped<TimeworkService>();
 
             services.AddCors(options =>
             {

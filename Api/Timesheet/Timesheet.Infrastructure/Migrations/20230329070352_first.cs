@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Timesheet.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class MyFirstMigration : Migration
+    public partial class first : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -22,7 +22,8 @@ namespace Timesheet.Infrastructure.Migrations
                     Du = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AccNo = table.Column<int>(type: "int", nullable: false),
                     EncPass = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    StoredSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
+                    StoredSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    Role = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -66,6 +67,29 @@ namespace Timesheet.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "TimeWorks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EmployeeId = table.Column<int>(type: "int", nullable: true),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    TimeIn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TimeOut = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    StartApply = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndApply = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TimeWorks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TimeWorks_Employees_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalTable: "Employees",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ProjectEmployees",
                 columns: table => new
                 {
@@ -98,6 +122,11 @@ namespace Timesheet.Infrastructure.Migrations
                 name: "IX_Timesheets_EmployeeId",
                 table: "Timesheets",
                 column: "EmployeeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TimeWorks_EmployeeId",
+                table: "TimeWorks",
+                column: "EmployeeId");
         }
 
         /// <inheritdoc />
@@ -108,6 +137,9 @@ namespace Timesheet.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Timesheets");
+
+            migrationBuilder.DropTable(
+                name: "TimeWorks");
 
             migrationBuilder.DropTable(
                 name: "Projects");

@@ -12,8 +12,8 @@ using Timesheet.Infrastructure.Persistence;
 namespace Timesheet.Infrastructure.Migrations
 {
     [DbContext(typeof(TimesheetContext))]
-    [Migration("20230321033029_secondMigration")]
-    partial class secondMigration
+    [Migration("20230329070352_first")]
+    partial class first
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -96,6 +96,39 @@ namespace Timesheet.Infrastructure.Migrations
                     b.ToTable("ProjectEmployees");
                 });
 
+            modelBuilder.Entity("Timesheet.Core.TimeWork", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("EndApply")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("StartApply")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("TimeIn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("TimeOut")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("TimeWorks");
+                });
+
             modelBuilder.Entity("Timesheet.Core.Timesheet", b =>
                 {
                     b.Property<int>("Id")
@@ -142,6 +175,15 @@ namespace Timesheet.Infrastructure.Migrations
                     b.Navigation("Project");
                 });
 
+            modelBuilder.Entity("Timesheet.Core.TimeWork", b =>
+                {
+                    b.HasOne("Timesheet.Core.Employee", "Employee")
+                        .WithMany("Timeworks")
+                        .HasForeignKey("EmployeeId");
+
+                    b.Navigation("Employee");
+                });
+
             modelBuilder.Entity("Timesheet.Core.Timesheet", b =>
                 {
                     b.HasOne("Timesheet.Core.Employee", "Employee")
@@ -156,6 +198,8 @@ namespace Timesheet.Infrastructure.Migrations
                     b.Navigation("ProjectEmployees");
 
                     b.Navigation("Timesheets");
+
+                    b.Navigation("Timeworks");
                 });
 
             modelBuilder.Entity("Timesheet.Core.Project", b =>

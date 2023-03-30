@@ -15,7 +15,8 @@ namespace Timesheet.Api.ViewModels.Extensions
                  EmployeeName = model.FullName,
                  AccNo = model.AccNo,
                  Du = model.Du,
-                 KnoxId = model.KnoxId
+                 KnoxId = model.KnoxId,
+                 Role = model.Role,
              };
 
 

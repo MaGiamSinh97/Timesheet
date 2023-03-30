@@ -1,11 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Office2010.Excel;
+using DocumentFormat.OpenXml.Spreadsheet;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Timesheet.Core;
 using Timesheet.Infrastructure.Persistence;
-using Task = System.Threading.Tasks.Task;
 
 namespace Timesheet.Api.Services
 {
@@ -30,7 +34,7 @@ namespace Timesheet.Api.Services
 
         public async Task<IEnumerable<Core.Timesheet>> GetAllByDateRange(DateTime fromDate, DateTime toDate)
         {
-            return await this.context.Timesheets.Where(t => t.Date >= fromDate && t.Date <= toDate).ToListAsync();
+            return await this.context.Timesheets.Include(x => x.Employee).ThenInclude(x => x.ProjectEmployees).ThenInclude(x => x.Project).AsNoTracking().Where(t => t.Date >= fromDate && t.Date <= toDate).ToListAsync();
         }
 
         public async Task AddRange(List<Core.Timesheet> timesheet)
