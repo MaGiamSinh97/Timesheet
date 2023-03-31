@@ -7,28 +7,22 @@ namespace Timesheet.Api.ViewModels.Extensions
 {
     public static class TimesheetViewModelHelper
     {
-        public static double AbsentTime(DateTime timeIn, DateTime timeOut)
+        public static double AbsentTime(Core.Timesheet model)
         {
             double absentTime = 0;
             var timemorning = DateTime.Parse("1899/12/31 8:00:00.000");
             var timeafternoon = DateTime.Parse("1899/12/31 17:00:00.000");
-            if (timeIn.TimeOfDay > timemorning.TimeOfDay)
+            if (model.TimeIn.TimeOfDay > timemorning.TimeOfDay)
             {
-                absentTime = timeIn.Subtract(timemorning).TotalMinutes;
+                absentTime = model.TimeIn.Subtract(timemorning).TotalMinutes;
             }
-            if (timeOut.TimeOfDay < timeafternoon.TimeOfDay)
+            if (model.Timeout.TimeOfDay < timeafternoon.TimeOfDay)
             {
-                absentTime += timeafternoon.Subtract(timeOut).TotalMinutes;
+                absentTime += timeafternoon.Subtract(model.Timeout).TotalMinutes;
             }
             return absentTime;
         }
 
-        public static int TotalAbsentTime(List<Core.Timesheet> timesheets)
-        {
-            int total = 0;
-
-            return total;
-        }
 
         public static TimesheetViewModel ToViewModel(this Core.Timesheet model) =>
             new TimesheetViewModel
@@ -40,7 +34,7 @@ namespace Timesheet.Api.ViewModels.Extensions
                 Date = model.Date.ToShortDateString(),
                 TimeIn = model.TimeIn.ToString("HH:mm"),
                 TimeOut = model.Timeout.ToString("HH:mm"),
-                AbsentTime = (int)AbsentTime(model.TimeIn,model.Timeout)            
+                AbsentTime = (int)AbsentTime(model)            
             };
        
         public static TimesheetViewExcelModel ToExcelViewModel(this Core.Timesheet model) =>
@@ -54,7 +48,7 @@ namespace Timesheet.Api.ViewModels.Extensions
                 Date = model.Date,
                 TimeIn = model.TimeIn.ToString("HH:mm"),
                 TimeOut = model.Timeout.ToString("HH:mm"),
-                AbsentTime = (int)AbsentTime(model.TimeIn, model.Timeout),
+                AbsentTime = (int)AbsentTime(model),
                 Du = model.Employee.Du,
                 ProjectId =  model.Employee.ProjectEmployees.Where(x => x.EmployeeId == model.Employee.Id).FirstOrDefault() != null ? model.Employee.ProjectEmployees.Where(x => x.EmployeeId == model.Employee.Id).FirstOrDefault().Project.Id : 0,
                 Project = model.Employee.ProjectEmployees.Where(x => x.EmployeeId == model.Employee.Id).FirstOrDefault() != null ? model.Employee.ProjectEmployees.Where(x => x.EmployeeId == model.Employee.Id).FirstOrDefault().Project.Name : "",

@@ -14,7 +14,7 @@ namespace Timesheet.Api.ViewModels
         public DateTime Date { get; set; }
         public string TimeIn { get; set; }
         public string TimeOut { get; set; }
-        public int AbsentTime { get; set; }
-        public int TotalAbsentTime { get; set; }
+        public double AbsentTime { get; set; }
+        public double TotalAbsentTime { get; set; }
     }
 }

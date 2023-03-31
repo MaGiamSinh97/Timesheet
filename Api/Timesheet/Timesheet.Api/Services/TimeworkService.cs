@@ -44,9 +44,9 @@ namespace Timesheet.Api.Services
             }
         }
 
-        public async Task<Core.TimeWork> GetAsync(int id)
+        public async Task<IEnumerable<Core.TimeWork>> GetTimeworkByEmployee(int id)
         {
-            return await this.context.TimeWorks.AsNoTracking().SingleOrDefaultAsync(t => t.Id == id);
+            return await this.context.TimeWorks.AsNoTracking().Where(x=>x.EmployeeId==id).ToListAsync();
         }
         public async Task<Core.TimeWork> GetTimeWorkbyEmployee(int employeeId)
         {
@@ -61,6 +61,10 @@ namespace Timesheet.Api.Services
                 return await this.context.SaveChangesAsync();
             }
             return 0;
+        }
+        public async Task<Core.TimeWork> GetAsync(int id)
+        {
+            return await this.context.TimeWorks.AsNoTracking().SingleOrDefaultAsync(t => t.Id == id);
         }
     }
 }

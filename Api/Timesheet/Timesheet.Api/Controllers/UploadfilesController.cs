@@ -20,6 +20,7 @@ using Timesheet.Core;
 using Timesheet.Api.ViewModels.Extensions;
 using Timesheet.Api.ViewModels;
 using Timesheet.Api.Helpers;
+using System.Runtime.CompilerServices;
 
 namespace FileuploadwithReact.Controllers
 {
@@ -31,12 +32,14 @@ namespace FileuploadwithReact.Controllers
         private readonly TimesheetService serviceTs;
         private readonly ProjectService servicePj;
         private readonly ProjectEmployeeService servicePE;
-        public UploadfilesController(EmployeeService serviceEmp, TimesheetService serviceTs, ProjectService servicePj, ProjectEmployeeService servicePE)
+        private readonly TimeworkService serviceTW;
+        public UploadfilesController(EmployeeService serviceEmp, TimesheetService serviceTs, ProjectService servicePj, ProjectEmployeeService servicePE, TimeworkService serviceTW)
         {
             this.serviceEmp = serviceEmp ?? throw new ArgumentNullException();
             this.serviceTs = serviceTs ?? throw new ArgumentNullException();
             this.servicePj = servicePj ?? throw new ArgumentNullException();
             this.servicePE = servicePE ?? throw new ArgumentNullException();
+            this.serviceTW = serviceTW ?? throw new ArgumentNullException();
         }
         [HttpPost("ImportFile")]
         public async Task<IActionResult> ImportFile([FromForm] IFormFile file)
@@ -130,8 +133,16 @@ namespace FileuploadwithReact.Controllers
 
                 foreach(var item in tsview)
                 {
+                    var timesheet = await serviceTs.GetAsync(item.Id);
+                    item.AbsentTime = serviceTs.AbsentTime(timesheet);
+                    
+                }
+
+                foreach(var item in tsview)
+                {
                     var data = tsview.Where(x=>x.EmployeeId == item.EmployeeId).ToList();
                     item.TotalAbsentTime = data.Sum(d => d.AbsentTime);
+
                 }
 
                 var worksheet = workbook.Worksheets.Add("Timesheet");

@@ -51,10 +51,10 @@ namespace Timesheet.Api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Core.Project>> Get(int id)
         {
-            var timeWork = await this.service.GetAsync(id);
+            var timeWork = await this.service.GetTimeworkByEmployee(id);
             if (timeWork != null)
             {
-                return Ok(timeWork);
+                return Ok(timeWork.ToViewModels());
             }
 
             return NotFound();
